@@ -15,43 +15,61 @@ const elements = {
 
 }
 
+export default{
 // Ações/Métodos/Funções
 
-Cypress.Commands.add('btnSalvaCadastro', () => {
+btnSalvaCadastro(){
     cy.get(elements.buttons.btnRegister)
     .click()
-})
+},
 
-Cypress.Commands.add('fillName', (name) => {
+fillName(name){
     cy.get(elements.fields.name)
     .type(name)
     .should('have.value', name)
-})
+},
 
-Cypress.Commands.add('fillEmail', (email) => {
+fillEmail(email){
     cy.get(elements.fields.email)
     .type(email)
     .should('have.value', email)
-})
+},
 
-Cypress.Commands.add('fillPassword', (password) => {
+fillEmailEmpty(email){
+    cy.get(elements.fields.email)
+    .should('be.empty')
+},
+
+fillPassword(password){
     cy.get(elements.fields.password)
     .type(password)
     .should('have.value', password)
-})
+},
 
-Cypress.Commands.add('checkMessage', (message) => {
+fillPasswordEmpty(password){
+    cy.get(elements.fields.password)
+    .should('be.empty')
+},
+
+fillPasswordInvalid(password){
+    cy.get(elements.fields.password)
+    .and(($value) => {
+    expect($value).to.have.length.lessThan(6); // Valida que a senha tem menos de 6 caracteres
+    });
+},
+
+checkMessage(message){
     cy.get('#errorMessageFirstName')
     .should('be.visible')
     .then((element) => {
         expect(element.text()).equal(message) 
     })
-})
+},
 
-Cypress.Commands.add('checkRegisterSucess', (name) => {
+
+checkRegisterSucess(name){
     cy.get('.swal2-popup')   
     //Necessário o uso de aspas invertidas por conta da interpolação de variáveis``   
     .contains(`Cadastro realizado!Bem-vindo ${name}`);  
-})
-
-
+}
+}

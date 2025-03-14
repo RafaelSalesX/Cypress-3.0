@@ -1,70 +1,72 @@
 /// <reference types="cypress" /> 
 //Essa linha serve para linkar as funções do cypress.
 
-import { faker } from '@faker-js/faker';
-//Para utilizar dados que se alteram a cada teste (email,nome,senha etc)
+import home_page from '../support/pages/home_page';
+import register_page from '../support/pages/register_page';
 
-describe('Desafio tela de cadastro', () => { 
-
-    beforeEach('Acessando página de cadastro',() => {
-    cy.acessaPaginaCadastro()
-    });
-    
 const user_data = require('../fixtures/desafio_valid_data.json')
 const user_data_invalid = require('../fixtures/desafio_invalid_data.json')
 
-    it('Validar campo nome vazio', () => {
-        cy.fillEmail(user_data.email)
-        cy.fillPassword(user_data.password)
-        cy.btnSalvaCadastro()
-        cy.checkMessage('O campo nome deve ser prenchido') 
-    })
+//const screens = ['desktop', 'iphone-xr', 'iphone-8'] //Validação de tela em vários tamanhos
+// screens.forEach(element => {        // Rodar o teste em todas as telas existentes no array 'screens'
 
-    it('Validar campo e-mail vazio', () => {
-        cy.fillName(user_data.name)
-        cy.get('#email')
-            .should('be.empty')
+    describe('Desafio tela de cadastro', () => { 
+        beforeEach('Acessando página de cadastro',() => {
 
-        cy.fillPassword(user_data.password)
-        cy.btnSalvaCadastro()   
-        cy.checkMessage('O campo e-mail deve ser prenchido corretamente') 
-    })
+            // if(element != 'desktop'){   //Se não for desktop ele vai rodar de acordo com o celular no Array. 
+                // cy.viewport(element)   
+            // }
 
-    it('Validar campo e-mail inválido', () => {
-        cy.fillName(user_data.name)
-        cy.fillEmail(user_data_invalid.email)
-        cy.fillPassword(user_data.password)
-        cy.btnSalvaCadastro()        
-        cy.checkMessage('O campo e-mail deve ser prenchido corretamente') 
-    })
-
-    it('Validar campo senha vazio', () => {
-        cy.fillName(user_data.name)
-        cy.fillEmail(user_data.email)
-        cy.get('#password')
-            .should('be.empty')
-
-        cy.btnSalvaCadastro()
-        cy.checkMessage('O campo senha deve ter pelo menos 6 dígitos') 
-    })
-
-    it('Validar campo senha inválido', () => {
-        cy.fillName(user_data.name)
-        cy.fillEmail(user_data.email)
-        cy.fillPassword(user_data_invalid.password) // Verifica que o valor digitado corresponde
-            .and(($value) => {
-            expect($value).to.have.length.lessThan(6); // Valida que a senha tem menos de 6 caracteres
-            });
-        
-        cy.btnSalvaCadastro()
-        cy.checkMessage('O campo senha deve ter pelo menos 6 dígitos') 
-    })
-
-    it('Cadastro realizado com sucesso', () => {
-        cy.fillName(user_data.name)
-        cy.fillEmail(user_data.email)
-        cy.fillPassword(user_data.password)
-        cy.btnSalvaCadastro()
-        cy.checkRegisterSucess(user_data.name)        
+            home_page.acessRegisterPage()
+        });
+    
+        it('Validar campo nome vazio', () => {
+            register_page.fillEmail(user_data.email)
+            register_page.fillPassword(user_data.password)
+            register_page.btnSalvaCadastro()
+            register_page.checkMessage('O campo nome deve ser prenchido') 
+        })
+    
+        it('Validar campo e-mail vazio', () => {
+            register_page.fillName(user_data.name)
+            register_page.fillEmailEmpty('')
+            register_page.fillPassword(user_data.password)
+            register_page.btnSalvaCadastro()   
+            register_page.checkMessage('O campo e-mail deve ser prenchido corretamente') 
+        })
+    
+        it('Validar campo e-mail inválido', () => {
+            register_page.fillName(user_data.name)
+            register_page.fillEmail(user_data_invalid.email)
+            register_page.fillPassword(user_data.password)
+            register_page.btnSalvaCadastro()        
+            register_page.checkMessage('O campo e-mail deve ser prenchido corretamente') 
+        })
+    
+        it('Validar campo senha vazio', () => {
+            register_page.fillName(user_data.name)
+            register_page.fillEmail(user_data.email)
+            register_page.fillPasswordEmpty('')
+            register_page.btnSalvaCadastro()
+            register_page.checkMessage('O campo senha deve ter pelo menos 6 dígitos') 
+        })
+    
+        it('Validar campo senha inválido', () => {
+            register_page.fillName(user_data.name)
+            register_page.fillEmail(user_data.email)
+            register_page.fillPasswordInvalid(user_data_invalid.password) // Verifica que o valor digitado corresponde
+            register_page.btnSalvaCadastro()
+            register_page.checkMessage('O campo senha deve ter pelo menos 6 dígitos') 
+        })
+    
+        it('Cadastro realizado com sucesso', () => {
+            register_page.fillName(user_data.name)
+            register_page.fillEmail(user_data.email)
+            register_page.fillPassword(user_data.password)
+            register_page.btnSalvaCadastro()
+            register_page.checkRegisterSucess(user_data.name)        
+        });
     });
-});
+// });
+
+
